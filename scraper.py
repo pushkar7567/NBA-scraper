@@ -4,8 +4,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from tabulate import tabulate
 
-#stats = input("Player or Team stats P/T: ")
-stats = "P"
+stats = input("Player or YearPool P/Y: ")
 if (stats == "P"):
     player_name = input("Enter Player Full Name: ")
     pname_str = player_name.lower()
@@ -16,15 +15,14 @@ if (stats == "P"):
     URL = "https://www.basketball-reference.com/players/{}.html".format(fpname_str)
 
     r = requests.get(URL)
-    soup = BeautifulSoup(r.content, 'lxml')
-
-    #player_mode = input("Career or Year stats C/Y")
+    soup = BeautifulSoup(r.content, 'html.parser')
 
     career_stats = soup.find('table', attrs = {'id':'per_game'})
     career_table = pd.read_html(str(career_stats))
+    career_table = career_table[0]
     print(career_table)
 
-elif  (stats == "T"):
+elif  (stats == "Y"):
     year = input("Enter Year:")
     URL = "https://www.basketball-reference.com/leagues/NBA_{}.html".format(year)
 
@@ -38,11 +36,4 @@ elif  (stats == "T"):
     w_standing_table = pd.read_html(str(tableW))
 
     print(tabulate(e_standing_table[0], headers=['->', 'Eastern Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
-
-
-
-
-
-
-
-
+    print(tabulate(w_standing_table[0], headers=['->', 'Western Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
