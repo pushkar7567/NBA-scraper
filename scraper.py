@@ -24,16 +24,32 @@ if (stats == "P"):
 
 elif  (stats == "Y"):
     year = input("Enter Year:")
-    URL = "https://www.basketball-reference.com/leagues/NBA_{}.html".format(year)
+    if (int(year)>2016):
+        URL = "https://www.basketball-reference.com/leagues/NBA_{}.html".format(year)
 
-    r = requests.get(URL)
-    soup = BeautifulSoup(r.content, 'lxml')
+        r = requests.get(URL)
+        soup = BeautifulSoup(r.content, 'lxml')
 
-    tableE = soup.find('table', attrs = {'id':'confs_standings_E'})
-    e_standing_table = pd.read_html(str(tableE))
+        tableE = soup.find('table', attrs = {'id':'confs_standings_E'})
+        e_standing_table = pd.read_html(str(tableE))
 
-    tableW = soup.find('table', attrs = {'id':'confs_standings_W'})
-    w_standing_table = pd.read_html(str(tableW))
+        tableW = soup.find('table', attrs = {'id':'confs_standings_W'})
+        w_standing_table = pd.read_html(str(tableW))
 
-    print(tabulate(e_standing_table[0], headers=['->', 'Eastern Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
-    print(tabulate(w_standing_table[0], headers=['->', 'Western Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
+        print(tabulate(e_standing_table[0], headers=['->', 'Eastern Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
+        print(tabulate(w_standing_table[0], headers=['->', 'Western Conference', 'W', 'L', 'W/L%', 'GB','PS/G', 'PA/G', 'SRS'], tablefmt='psql'))
+
+    else:
+        URL = "https://www.basketball-reference.com/leagues/NBA_{}_standings.html".format(year) 
+
+        r = requests.get(URL)
+        soup = BeautifulSoup(r.content, 'lxml')
+
+        tableE = soup.find('table', attrs = {'id':'divs_standings_E'})
+        e_standing_table = pd.read_html(str(tableE))
+
+        tableW = soup.find('table', attrs = {'id':'divs_standings_W'})
+        w_standing_table = pd.read_html(str(tableW))
+
+        print(e_standing_table)
+        print(w_standing_table)
